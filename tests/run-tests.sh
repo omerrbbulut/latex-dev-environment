@@ -70,11 +70,28 @@ hdr "5. sandbox install / uninstall"
 SB="$WORK/home"
 mkdir -p "$SB/.config/Code/User"
 fixture="$HOME/.config/Code/User/settings.json"
+# Fixture: the user's real settings minus any block we installed earlier. If
+# that leaves no settings (fresh system), use a realistic sample instead.
 if [[ -f "$fixture" ]]; then
-  # use the user's real settings as fixture, minus any block we installed earlier
   LDE_LIB=scripts/lib python3 -c 'import os,sys; sys.path.insert(0,os.environ["LDE_LIB"]); import vscode_merge as vm
-sys.stdout.write(vm.strip_block(open(sys.argv[1],encoding="utf-8").read()))' "$fixture" >"$SB/.config/Code/User/settings.json"
-else printf '{\n    // sample\n    "editor.fontSize": 14\n}\n' >"$SB/.config/Code/User/settings.json"; fi
+t = vm.strip_block(open(sys.argv[1],encoding="utf-8").read())
+sys.stdout.write(t if vm.loads(t, allow_empty=True) else "")' "$fixture" >"$SB/.config/Code/User/settings.json"
+fi
+if [[ ! -s "$SB/.config/Code/User/settings.json" ]]; then
+  cat >"$SB/.config/Code/User/settings.json" <<'JSONC'
+{
+    // THEME & APPEARANCE
+    "workbench.colorTheme": "Catppuccin Mocha",
+    "editor.fontFamily": "'JetBrainsMono Nerd Font', monospace", // font
+    "editor.formatOnSave": true,
+    /* unrelated language settings */
+    "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
+    "json.schemaDownload.trustedDomains": {
+        "https://raw.githubusercontent.com/catppuccin/vscode/": true
+    }
+}
+JSONC
+fi
 cp "$SB/.config/Code/User/settings.json" "$WORK/settings.orig"
 sbenv=(env -u XDG_CONFIG_HOME -u XDG_STATE_HOME -u XDG_CACHE_HOME HOME="$SB" NO_COLOR=1)
 if "${sbenv[@]}" scripts/configure-vscode.sh >"$WORK/cfg1.log" 2>&1; then t_ok "configure-vscode.sh (first run)"
@@ -93,8 +110,16 @@ old = vm.loads(open(sys.argv[1]).read()); new = vm.loads(open(sys.argv[2]).read(
 bad = [k for k in old if new.get(k) != old[k]]
 sys.exit(1 if bad else 0)
 PY
-grep -q '"workbench.colorTheme"' "$SB/.config/Code/User/settings.json" 2>/dev/null || [[ ! -f "$fixture" ]] \
-  && t_ok "theme / font / unrelated settings still present" || t_fail "unrelated settings lost"
+LDE_LIB=scripts/lib python3 - "$WORK/settings.orig" "$SB/.config/Code/User/settings.json" <<'PY' \
+  && t_ok "text outside the managed block is unchanged (comments, theme, fonts, other languages)" \
+  || t_fail "text outside the managed block changed"
+import os, sys
+sys.path.insert(0, os.environ["LDE_LIB"])
+import vscode_merge as vm
+orig = open(sys.argv[1], encoding="utf-8").read()
+merged = open(sys.argv[2], encoding="utf-8").read()
+sys.exit(0 if vm.strip_block(merged) == orig and vm.find_block(merged) else 1)
+PY
 if "${sbenv[@]}" scripts/uninstall.sh --yes >"$WORK/un.log" 2>&1 \
    && cmp -s "$WORK/settings.orig" "$SB/.config/Code/User/settings.json" \
    && [[ ! -e "$SB/.config/chktex/chktexrc" && ! -e "$SB/.config/Code/User/snippets/latex.code-snippets" ]]; then
@@ -154,7 +179,9 @@ scripts/new-project.sh article "$WORK/newproj" >/dev/null 2>&1 && t_fail "new-pr
 
 # ---------------------------------------------------------------------------
 hdr "8. repository hygiene"
-if git rev-parse --git-dir >/dev/null 2>&1; then
+if ! command -v git >/dev/null || ! git rev-parse --git-dir >/dev/null 2>&1; then
+  t_skip "not a git checkout (or git missing): diff/binary/secret checks skipped"
+else
   git diff --check && git diff --cached --check && t_ok "git diff --check" || t_fail "whitespace errors"
   files=$( { git ls-files; git ls-files --others --exclude-standard; } | sort -u)
   bins=$(while IFS= read -r f; do [[ -f "$f" ]] && ! grep -Iq . "$f" && [[ -s "$f" ]] && echo "$f"; done <<<"$files")
