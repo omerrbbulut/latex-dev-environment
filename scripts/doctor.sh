@@ -7,6 +7,8 @@
 #   --project DIR  also inspect DIR/.vscode/settings.json for settings that
 #                  override or break the global configuration
 #   --keep         keep the temporary build directory for inspection
+#   --no-vscode    headless system (CI, container): VS Code / extension checks
+#                  are reported as SKIP instead of FAIL; everything else runs
 #
 # Prints PASS / WARN / FAIL lines and a summary. Exit status is 1 if any
 # FAIL was recorded; WARN (optional features) never fails the run.
@@ -16,22 +18,24 @@ set -Euo pipefail
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
-QUICK=0 KEEP=0 PROJECT=""
+QUICK=0 KEEP=0 PROJECT="" NO_VSCODE=0
 while (($#)); do
   case "$1" in
     --quick) QUICK=1 ;;
     --keep) KEEP=1 ;;
+    --no-vscode) NO_VSCODE=1 ;;
     --project) PROJECT=${2:?--project needs a directory}; shift ;;
-    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,17p' "$0"; exit 0 ;;
     *) printf 'unknown option: %s\n' "$1" >&2; exit 2 ;;
   esac
   shift
 done
 
-N_PASS=0 N_WARN=0 N_FAIL=0
+N_PASS=0 N_WARN=0 N_FAIL=0 N_SKIP=0
 pass() { N_PASS=$((N_PASS + 1)); printf '  %sPASS%s  %s\n' "$_c_grn" "$_c_off" "$*"; }
 wrn()  { N_WARN=$((N_WARN + 1)); printf '  %sWARN%s  %s\n' "$_c_yel" "$_c_off" "$*"; }
 fl()   { N_FAIL=$((N_FAIL + 1)); printf '  %sFAIL%s  %s\n' "$_c_red" "$_c_off" "$*"; }
+skp()   { N_SKIP=$((N_SKIP + 1)); printf '  %sSKIP%s  %s\n' "$_c_dim" "$_c_off" "$*"; }
 section() { printf '\n%s%s%s\n' "$_c_blu" "$*" "$_c_off"; }
 
 first_line() { "$@" 2>&1 | head -n1; }
@@ -110,7 +114,9 @@ fi
 # ---------------------------------------------------------------------------
 section "VS Code"
 LW_DIR=""
-if CODE=$(code_bin); then
+if [[ "$NO_VSCODE" == 1 ]]; then
+  skp "VS Code and extensions (--no-vscode)"
+elif CODE=$(code_bin); then
   pass "$CODE $(first_line "$CODE" --version)"
   exts=$("$CODE" --list-extensions --show-versions 2>/dev/null | tr '[:upper:]' '[:lower:]')
   while IFS= read -r ext; do
@@ -184,6 +190,8 @@ PY
   else
     fl "setting keys unknown to LaTeX Workshop $lw_version: $bad_keys"
   fi
+elif [[ "$NO_VSCODE" == 1 ]]; then
+  skp "keybinding command IDs / setting keys vs. installed LaTeX Workshop (--no-vscode)"
 else
   wrn "LaTeX Workshop directory not found; command IDs not verified"
 fi
@@ -322,7 +330,8 @@ if [[ "$QUICK" == 0 ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-printf '\n%sSummary:%s %s%d PASS%s, %s%d WARN%s, %s%d FAIL%s\n' "$_c_blu" "$_c_off" \
-  "$_c_grn" "$N_PASS" "$_c_off" "$_c_yel" "$N_WARN" "$_c_off" "$_c_red" "$N_FAIL" "$_c_off"
+printf '\n%sSummary:%s %s%d PASS%s, %s%d WARN%s, %s%d FAIL%s%s\n' "$_c_blu" "$_c_off" \
+  "$_c_grn" "$N_PASS" "$_c_off" "$_c_yel" "$N_WARN" "$_c_off" "$_c_red" "$N_FAIL" "$_c_off" \
+  "$( ((N_SKIP)) && printf ', %d SKIP' "$N_SKIP")"
 if [[ "${KEEP}" == 1 && -n "${WORK:-}" ]]; then trap - EXIT; info "build files kept in $WORK"; fi
 ((N_FAIL == 0))

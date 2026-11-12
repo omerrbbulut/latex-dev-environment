@@ -42,16 +42,16 @@ install_code_from_microsoft() {
   fpr=$(gpg --show-keys --with-colons "$tmp/microsoft.gpg" 2>/dev/null | awk -F: '/^fpr:/{print $10; exit}')
   [[ "$fpr" == "$MS_KEY_FPR" ]] || die "unexpected Microsoft key fingerprint: $fpr"
   ok "Microsoft signing key fingerprint verified ($fpr)"
-  sudo install -D -o root -g root -m 644 "$tmp/microsoft.gpg" /usr/share/keyrings/microsoft.gpg
+  "${SUDO[@]}" install -D -o root -g root -m 644 "$tmp/microsoft.gpg" /usr/share/keyrings/microsoft.gpg
   printf '%s\n' \
     "Types: deb" \
     "URIs: https://packages.microsoft.com/repos/code" \
     "Suites: stable" \
     "Components: main" \
     "Architectures: $(arch)" \
-    "Signed-By: /usr/share/keyrings/microsoft.gpg" | sudo tee /etc/apt/sources.list.d/vscode.sources >/dev/null
-  sudo apt-get update
-  sudo apt-get install -y code
+    "Signed-By: /usr/share/keyrings/microsoft.gpg" | "${SUDO[@]}" tee /etc/apt/sources.list.d/vscode.sources >/dev/null
+  "${SUDO[@]}" apt-get update
+  "${SUDO[@]}" apt-get install -y code
   rm -rf "$tmp"
 }
 

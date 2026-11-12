@@ -106,10 +106,11 @@ if [[ "$SKIP_PKGS" == 0 ]]; then
   else
     info "missing: ${missing[*]}"
     if [[ "$DRY_RUN" == 1 ]]; then
-      info "would run: sudo apt-get install --no-install-recommends ${missing[*]}"
-    elif ask "Install ${#missing[@]} missing package(s) with sudo apt-get?"; then
-      sudo apt-get update
-      sudo apt-get install -y --no-install-recommends "${missing[@]}"
+      info "would run: ${SUDO[*]:+${SUDO[*]} }apt-get install --no-install-recommends ${missing[*]}"
+    elif ask "Install ${#missing[@]} missing package(s) with apt-get${SUDO[*]:+ (via sudo)}?"; then
+      have sudo || ((${#SUDO[@]} == 0)) || die "sudo not found; run as root or install sudo"
+      "${SUDO[@]}" apt-get update
+      "${SUDO[@]}" apt-get install -y --no-install-recommends "${missing[@]}"
       ok "packages installed"
     else
       warn "skipped package installation; missing tools will be reported by doctor.sh"

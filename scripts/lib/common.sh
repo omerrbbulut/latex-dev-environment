@@ -41,6 +41,9 @@ on_error() {
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# Privilege escalation for apt: none when already root (e.g. in a container).
+if [[ ${EUID:-$(id -u)} -eq 0 ]]; then SUDO=(); else SUDO=(sudo); fi
+
 # ask "question" -> 0 for yes. Honours ASSUME_YES=1. Non-interactive => no.
 ask() {
   if [[ "${ASSUME_YES:-0}" == 1 ]]; then return 0; fi
