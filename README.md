@@ -6,7 +6,7 @@ Code ayarlarınıza (tema, font, C/C++, Python, Qt, gömülü sistem
 yapılandırmaları) dokunmaz. Her değişiklikten önce yedek alır.
 
 ```bash
-git clone git@github.com:omerrbbulut/latex-dev-environment.git ~/Projects/latex-dev-environment
+git clone https://github.com/omerrbbulut/latex-dev-environment.git ~/Projects/latex-dev-environment
 cd ~/Projects/latex-dev-environment
 ./scripts/install-ubuntu.sh        # eksik paketler + eklentiler + yapılandırma + doğrulama
 ./scripts/doctor.sh                # istediğiniz zaman: PASS / WARN / FAIL raporu
