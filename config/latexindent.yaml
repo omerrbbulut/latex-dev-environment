@@ -1,0 +1,87 @@
+# latex-dev-environment — latexindent user settings
+#
+# Installed to ~/.config/latexindent/latexindent.yaml and registered via
+# ~/.config/latexindent/indentconfig.yaml, so both VS Code ("Format Document",
+# Ctrl+Alt+F) and the command line use the same rules.
+#
+# Philosophy: indentation only. No line wrapping, no sentence splitting,
+# no removal/insertion of blank lines -> the text you wrote stays the text
+# you get. latexindent never edits the file in place unless you pass -w;
+# VS Code formats a temporary copy and applies the result as an undoable edit.
+
+# Indentation unit. VS Code overrides this with editor.tabSize (2 spaces for
+# LaTeX) through `-y=defaultIndent: '%INDENT%'`.
+defaultIndent: "  "
+
+# Keep the body of these environments flush left (they usually wrap the whole
+# file or long blocks; indenting them only adds noise).
+noAdditionalIndent:
+  document: 1
+  abstract: 0
+  frame: 0
+
+# Do not indent the content after sectioning commands.
+indentAfterHeadings:
+  part:
+    indentAfterThisHeading: 0
+  chapter:
+    indentAfterThisHeading: 0
+  section:
+    indentAfterThisHeading: 0
+  subsection:
+    indentAfterThisHeading: 0
+
+# Verbatim-like environments: content is never touched.
+verbatimEnvironments:
+  verbatim: 1
+  Verbatim: 1
+  lstlisting: 1
+  minted: 1
+  comment: 1
+
+verbatimCommands:
+  verb: 1
+  lstinline: 1
+  mintinline: 1
+
+# Align '&' delimiters in tabular-like and AMS math environments.
+# Only horizontal whitespace around '&' and '\\' is changed.
+lookForAlignDelims:
+  tabular:
+    delims: 1
+    alignDoubleBackSlash: 1
+    spacesBeforeDoubleBackSlash: 1
+  tabularx:
+    delims: 1
+  longtable:
+    delims: 1
+  array:
+    delims: 1
+  matrix: 1
+  pmatrix: 1
+  bmatrix: 1
+  cases: 1
+  align: 1
+  align*: 1
+  alignat: 1
+  alignat*: 1
+  aligned: 1
+  split: 1
+  # equation/gather/multline: never realigned
+  eqnarray: 0
+
+# Trailing whitespace is removed (the editor already does this on save).
+removeTrailingWhitespace:
+  beforeProcessing: 0
+  afterProcessing: 1
+
+# Safety: no automatic line breaking / text wrapping.
+modifyLineBreaks:
+  textWrapOptions:
+    columns: 0
+  oneSentencePerLine:
+    manipulateSentences: 0
+
+# Backups are only relevant with -w (overwrite). Keep a single one.
+maxNumberOfBackUps: 1
+onlyOneBackUp: 1

@@ -1,0 +1,46 @@
+## latex-dev-environment — ChkTeX local configuration
+##
+## Installed to ~/.config/chktex/chktexrc and passed with `-l` by LaTeX
+## Workshop (see vscode/settings.json). This file EXTENDS the system file
+## /etc/chktexrc; it does not replace it.
+##
+## Command line used by VS Code:   chktex -wall -n22 -n30 -e16 -q -l <this file>
+## Same on the terminal:          chktex -wall -n22 -n30 -e16 -q -l ~/.config/chktex/chktexrc file.tex
+##
+## Disabled warnings (all others stay on; nothing important is silenced):
+##   21  "This command might not be intended."  Only active with -wall and it
+##       fires on legitimate math such as \left\| x \right\| (norms).
+##   24  "Delete this space to maintain correct pagereferences."  Fires on the
+##       very common style of putting \label{...} on its own line after
+##       \section{...} or \caption{...}, which is harmless.
+##   46  "Use \( ... \) instead of $ ... $."  Pure style preference; $...$ is
+##       standard LaTeX and works everywhere.
+## Already disabled by LaTeX Workshop's defaults:
+##   22  comment displayed;  30  multiple spaces detected.
+## Promoted to an error by LaTeX Workshop's defaults:
+##   16  mathmode still on at end of file.
+
+CmdLine
+{
+    -n21 -n24 -n46
+}
+
+## Note: \cref/\Cref/\autoref are deliberately NOT added to "Linker":
+## they print the reference name themselves ("Bölüm 2", "Figure 3"), so a
+## ~ in front of them would be wrong. \ref and \pageref keep warning 2.
+
+## Environments whose contents are verbatim (never linted).
+VerbEnvir
+{
+    lstlisting minted Verbatim
+}
+
+## Commands that may be terminated by a space without warning 1.
+Silent
+{
+    \centering \hfill \noindent \onehalfspacing \doublespacing
+    \printbibliography \frontmatter \mainmatter \backmatter \appendix
+    \toprule \midrule \bottomrule \tableofcontents \cleardoublepage
+    \endfirsthead \endhead \endfoot \endlastfoot
+    \ifPDFTeX \ifXeTeX \ifLuaTeX \else \fi
+}
