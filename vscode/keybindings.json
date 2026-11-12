@@ -1,0 +1,79 @@
+// latex-dev-environment — VS Code keybindings fragment (JSONC).
+//
+// Merged by scripts/configure-vscode.sh into a marked block at the end of
+// ~/.config/Code/User/keybindings.json. Every command ID was checked against
+// LaTeX Workshop 10.20.0 (package.json "contributes.commands").
+//
+// Contexts:
+//   LaTeX editor : editorLangId latex | latex-expl3 | doctex
+//   +bibtex      : also active in .bib files (build/clean/kill/recipes)
+//   PDF viewer   : activeWebviewPanelId == 'latex-workshop-pdf'
+//                  (LaTeX Workshop's tab viewer forwards key presses)
+//
+// Not bound here on purpose (VS Code defaults already do it):
+//   Ctrl+S        workbench.action.files.save  (+ autoBuild.run = onSave)
+//   Ctrl+Space    editor.action.triggerSuggest
+//   Ctrl+Shift+M  workbench.actions.view.problems
+[
+    {
+        "key": "ctrl+alt+b",
+        "command": "latex-workshop.build",
+        "when": "(editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^bibtex$/ || activeWebviewPanelId == 'latex-workshop-pdf') && !virtualWorkspace"
+    },
+    {
+        "key": "ctrl+alt+v",
+        "command": "latex-workshop.view",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+    },
+    {
+        "key": "ctrl+alt+j",
+        "command": "latex-workshop.synctex",
+        "when": "editorTextFocus && editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+    },
+    {
+        "key": "ctrl+alt+r",
+        "command": "latex-workshop.refresh-viewer",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$/ || activeWebviewPanelId == 'latex-workshop-pdf'"
+    },
+    {
+        "key": "ctrl+alt+c",
+        "command": "latex-workshop.clean",
+        "when": "(editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^bibtex$/ || activeWebviewPanelId == 'latex-workshop-pdf') && !virtualWorkspace"
+    },
+    {
+        "key": "ctrl+alt+k",
+        "command": "latex-workshop.kill",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^bibtex$/ || activeWebviewPanelId == 'latex-workshop-pdf'"
+    },
+    // Ctrl+Alt+M is LaTeX Workshop's default for the math preview panel.
+    // It is reassigned to recipe selection; math preview moves to Ctrl+Alt+P.
+    {
+        "key": "ctrl+alt+m",
+        "command": "-latex-workshop.toggleMathPreviewPanel"
+    },
+    {
+        "key": "ctrl+alt+m",
+        "command": "latex-workshop.recipes",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^bibtex$/ || activeWebviewPanelId == 'latex-workshop-pdf'"
+    },
+    {
+        "key": "ctrl+alt+p",
+        "command": "latex-workshop.toggleMathPreviewPanel",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+    },
+    {
+        "key": "ctrl+alt+f",
+        "command": "editor.action.formatDocument",
+        "when": "editorTextFocus && !editorReadonly && editorLangId =~ /^latex$|^bibtex$/"
+    },
+    {
+        "key": "ctrl+alt+l",
+        "command": "latex-workshop.compilerlog",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$|^bibtex$/ || activeWebviewPanelId == 'latex-workshop-pdf'"
+    },
+    {
+        "key": "ctrl+alt+w",
+        "command": "latex-workshop.wordcount",
+        "when": "editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+    }
+]

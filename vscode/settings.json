@@ -1,0 +1,147 @@
+// latex-dev-environment — VS Code user settings fragment (JSONC).
+//
+// This file is NOT copied over ~/.config/Code/User/settings.json.
+// scripts/configure-vscode.sh merges these keys into a marked block at the
+// end of the user settings file. Keys you already set yourself win and are
+// reported, never overwritten. ${HOME} is substituted during the merge.
+//
+// Every key below was verified against LaTeX Workshop 10.20.0's package.json.
+{
+    // ---------------------------------------------------------------
+    // Build: latexmk for every engine. XeLaTeX is first, hence default.
+    // Per-project override: put `% !LW recipe = PDFLaTeX (latexmk)` in the
+    // header comment block of the root .tex file.
+    // ---------------------------------------------------------------
+    "latex-workshop.latex.recipes": [
+        { "name": "XeLaTeX (latexmk)", "tools": ["lde-xelatexmk"] },
+        { "name": "PDFLaTeX (latexmk)", "tools": ["lde-pdflatexmk"] },
+        { "name": "LuaLaTeX (latexmk)", "tools": ["lde-lualatexmk"] },
+        { "name": "latexmk (.latexmkrc decides engine)", "tools": ["lde-latexmk-rc"] }
+    ],
+    // "-r include-subdirs.pl" (after -outdir/-auxdir) pre-creates build/<subdir>
+    // for \include{chapters/x}; see config/latexmk/include-subdirs.pl.
+    "latex-workshop.latex.tools": [
+        {
+            "name": "lde-xelatexmk",
+            "command": "latexmk",
+            "args": ["-xelatex", "-synctex=1", "-interaction=nonstopmode", "-file-line-error",
+                     "-outdir=%OUTDIR%", "-auxdir=%AUXDIR%",
+                     "-r", "${HOME}/.config/latex-dev-environment/latexmk/include-subdirs.pl", "%DOC%"],
+            "env": {}
+        },
+        {
+            "name": "lde-pdflatexmk",
+            "command": "latexmk",
+            "args": ["-pdf", "-synctex=1", "-interaction=nonstopmode", "-file-line-error",
+                     "-outdir=%OUTDIR%", "-auxdir=%AUXDIR%",
+                     "-r", "${HOME}/.config/latex-dev-environment/latexmk/include-subdirs.pl", "%DOC%"],
+            "env": {}
+        },
+        {
+            "name": "lde-lualatexmk",
+            "command": "latexmk",
+            "args": ["-lualatex", "-synctex=1", "-interaction=nonstopmode", "-file-line-error",
+                     "-outdir=%OUTDIR%", "-auxdir=%AUXDIR%",
+                     "-r", "${HOME}/.config/latex-dev-environment/latexmk/include-subdirs.pl", "%DOC%"],
+            "env": {}
+        },
+        {
+            "name": "lde-latexmk-rc",
+            "command": "latexmk",
+            "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error",
+                     "-outdir=%OUTDIR%", "-auxdir=%AUXDIR%",
+                     "-r", "${HOME}/.config/latex-dev-environment/latexmk/include-subdirs.pl", "%DOC%"],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "first",
+    // %DIR% = directory of the ROOT file, so multi-file projects that use
+    // \include{chapters/...} share one build/ next to main.tex.
+    "latex-workshop.latex.outDir": "%DIR%/build",
+    "latex-workshop.latex.auxDir": "%OUTDIR%",
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    // Never delete logs / SyncTeX automatically; cleaning is manual only.
+    "latex-workshop.latex.autoClean.run": "never",
+    "latex-workshop.latex.clean.method": "command",
+    "latex-workshop.latex.clean.command": "latexmk",
+    "latex-workshop.latex.clean.args": ["-outdir=%OUTDIR%", "-auxdir=%AUXDIR%", "-c", "%TEX%"],
+
+    // ---------------------------------------------------------------
+    // PDF viewer + SyncTeX (built-in tab viewer, Ctrl+Click = inverse sync)
+    // ---------------------------------------------------------------
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.view.pdf.tab.editorGroup": "right",
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "ctrl-click",
+    "latex-workshop.view.pdf.internal.keyboardEvent": "auto",
+    "latex-workshop.synctex.afterBuild.enabled": false,
+
+    // ---------------------------------------------------------------
+    // IntelliSense / hover
+    // ---------------------------------------------------------------
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.intellisense.unimathsymbols.enabled": true,
+    "latex-workshop.intellisense.citation.backend": "biblatex",
+    "latex-workshop.hover.preview.enabled": true,
+    "latex-workshop.hover.ref.enabled": true,
+    "latex-workshop.hover.citation.enabled": true,
+    "latex-workshop.hover.command.enabled": true,
+
+    // ---------------------------------------------------------------
+    // Diagnostics: ChkTeX on save with the repository chktexrc.
+    // lacheck is disabled to avoid duplicate, noisier warnings.
+    // ---------------------------------------------------------------
+    "latex-workshop.linting.chktex.enabled": true,
+    "latex-workshop.linting.lacheck.enabled": false,
+    "latex-workshop.linting.run": "onSave",
+    "latex-workshop.linting.chktex.exec.path": "chktex",
+    "latex-workshop.linting.chktex.exec.args": ["-wall", "-n22", "-n30", "-e16", "-q",
+                                                 "-l", "${HOME}/.config/chktex/chktexrc"],
+    "latex-workshop.message.error.show": true,
+    "latex-workshop.message.warning.show": true,
+
+    // ---------------------------------------------------------------
+    // Formatting: latexindent through "Format Document".
+    // -c puts indent.log/backups into a cache dir instead of the project.
+    // %INDENT% follows editor.tabSize for LaTeX (2 spaces, see below).
+    // ---------------------------------------------------------------
+    "latex-workshop.formatting.latex": "latexindent",
+    "latex-workshop.formatting.latexindent.path": "latexindent",
+    "latex-workshop.formatting.latexindent.args": ["-c", "${HOME}/.cache/latexindent/", "%TMPFILE%",
+                                                    "-y=defaultIndent: '%INDENT%'"],
+
+    // ---------------------------------------------------------------
+    // Word count (texcount): status bar updates on save.
+    // ---------------------------------------------------------------
+    "latex-workshop.texcount.path": "texcount",
+    // LaTeX Workshop adds -merge itself (follows \input/\include).
+    "latex-workshop.texcount.args": ["-utf8"],
+    "latex-workshop.texcount.autorun": "onSave",
+
+    // ---------------------------------------------------------------
+    // Spell checking: Code Spell Checker + Turkish dictionary, scoped to
+    // LaTeX/BibTeX files only (other languages keep plain English).
+    // ---------------------------------------------------------------
+    "cSpell.languageSettings": [
+        { "languageId": "latex,bibtex", "locale": "*", "dictionaries": ["tr-tr"] }
+    ],
+
+    // ---------------------------------------------------------------
+    // Editor behaviour for LaTeX / BibTeX only
+    // ---------------------------------------------------------------
+    "[latex]": {
+        "editor.defaultFormatter": "James-Yu.latex-workshop",
+        "editor.formatOnSave": false,
+        "editor.wordWrap": "on",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.quickSuggestions": { "other": true, "comments": false, "strings": true },
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.snippetSuggestions": "top"
+    },
+    "[bibtex]": {
+        "editor.defaultFormatter": "James-Yu.latex-workshop",
+        "editor.formatOnSave": false,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+    }
+}

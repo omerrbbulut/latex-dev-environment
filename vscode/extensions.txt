@@ -1,0 +1,10 @@
+# VS Code extensions required by latex-dev-environment (one ID per line).
+# Only what LaTeX needs; themes, fonts and other language tooling are yours
+# and are never installed, changed or removed by these scripts.
+#
+# LaTeX Workshop: build, PDF viewer, SyncTeX, IntelliSense, ChkTeX, latexindent,
+# word count, snippets/hover. Official, open source (MIT).
+james-yu.latex-workshop
+# Code Spell Checker (offline, open source) + its official Turkish dictionary.
+streetsidesoftware.code-spell-checker
+streetsidesoftware.code-spell-checker-turkish
