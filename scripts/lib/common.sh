@@ -44,6 +44,14 @@ have() { command -v "$1" >/dev/null 2>&1; }
 # Privilege escalation for apt: none when already root (e.g. in a container).
 if [[ ${EUID:-$(id -u)} -eq 0 ]]; then SUDO=(); else SUDO=(sudo); fi
 
+# Refuse `sudo ./script.sh`: it would configure root's VS Code and leave
+# root-owned files behind. Real root (containers, CI) has no SUDO_USER.
+refuse_sudo_invocation() {
+  if [[ ${EUID:-$(id -u)} -eq 0 && -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
+    die "do not run $(basename "$0") with sudo. Run it as ${SUDO_USER}; it asks for sudo itself, only for apt."
+  fi
+}
+
 # ask "question" -> 0 for yes. Honours ASSUME_YES=1. Non-interactive => no.
 ask() {
   if [[ "${ASSUME_YES:-0}" == 1 ]]; then return 0; fi

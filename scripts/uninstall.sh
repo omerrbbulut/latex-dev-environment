@@ -14,6 +14,7 @@ set -Eeuo pipefail
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 trap 'on_error $LINENO' ERR
+refuse_sudo_invocation
 
 ASSUME_YES=0
 for arg in "$@"; do

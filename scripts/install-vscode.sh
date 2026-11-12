@@ -13,6 +13,7 @@ set -Eeuo pipefail
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 trap 'on_error $LINENO' ERR
+refuse_sudo_invocation
 
 INSTALL_CODE=0
 DRY_RUN=${DRY_RUN:-0}
