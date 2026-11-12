@@ -1,0 +1,18 @@
+% !TEX root = ../main.tex
+\section{Teknik Tasarım}
+\label{sec:tasarim}
+
+\subsection{Örnekleme}
+Örnekleme periyodu $T_s$ ve kanal sayısı $C$ için toplam veri hızı
+\cref{eq:veri-hizi} ile hesaplanır \parencite{knuth1984texbook}:
+\begin{equation}
+  R = \frac{C \cdot b}{T_s}
+  \label{eq:veri-hizi}
+\end{equation}
+Burada $b$ örnek başına bit sayısıdır.
+
+\subsection{Tasarım Kararları}
+\begin{enumerate}[label=TK-\arabic*]
+  \item Çift tamponlama ile DMA kullanılır.
+  \item Zaman damgaları donanım sayacından alınır.
+\end{enumerate}

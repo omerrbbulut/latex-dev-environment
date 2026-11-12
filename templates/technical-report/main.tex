@@ -1,0 +1,142 @@
+% !LW recipe = XeLaTeX (latexmk)
+% -----------------------------------------------------------------------------
+%  Technical report template — latex-dev-environment
+%  Engineering documentation: requirements, architecture, design, tests.
+%  Engine : XeLaTeX  |  Bibliography : biblatex + biber
+%  Sections live in sections/*.tex and are pulled in with \input.
+% -----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+% --- Document metadata (edit here) -------------------------------------------
+\newcommand{\doctitle}{Sistem Tasarım Raporu}
+\newcommand{\docsubtitle}{Örnek Gömülü Veri Toplama Birimi}
+\newcommand{\docid}{RPT-001}
+\newcommand{\docversion}{1.0}
+\newcommand{\docauthor}{Ad Soyad}
+\newcommand{\docorg}{Kurum / Ekip Adı}
+\newcommand{\docstatus}{Taslak}
+
+% --- Page layout -------------------------------------------------------------
+\usepackage[a4paper,margin=2.5cm,headheight=14pt]{geometry}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+% --- Language ----------------------------------------------------------------
+\usepackage{polyglossia}
+\setdefaultlanguage{turkish}
+\setotherlanguage{english}
+
+% --- Mathematics -------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+
+% --- Fonts -------------------------------------------------------------------
+\usepackage{fontspec}
+\IfFontExistsTF{Aptos}{%
+  \setmainfont{Aptos}[
+    BoldFont       = {Aptos Bold},
+    ItalicFont     = {Aptos Italic},
+    BoldItalicFont = {Aptos Bold Italic}]%
+}{%
+  \setmainfont{TeX Gyre Heros}%
+}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+
+% --- Tables, figures, diagrams, units ----------------------------------------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+\usepackage[final]{microtype}
+
+% --- Code listings -----------------------------------------------------------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left, numberstyle=\tiny\color{gray},
+  frame=single, rulecolor=\color{gray!50},
+  breaklines=true, columns=fullflexible, keepspaces=true,
+  showstringspaces=false, captionpos=b,
+  keywordstyle=\color{blue!60!black}\bfseries,
+  commentstyle=\color{green!40!black}\itshape,
+  stringstyle=\color{red!50!black},
+}
+% Preload languages in the preamble: under Turkish rules \lowercase{ANSI}
+% yields "ansı" (dotless i), which breaks dialect lookup inside the document.
+\lstloadlanguages{[ANSI]C,Python,bash}
+\renewcommand{\lstlistingname}{Kod}
+\renewcommand{\lstlistlistingname}{Kod Listesi}
+
+% --- Header / footer ---------------------------------------------------------
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\docid}
+\fancyhead[R]{\small\doctitle}
+\fancyfoot[L]{\small Sürüm \docversion{} --- \docstatus}
+\fancyfoot[R]{\small Sayfa \thepage/\pageref*{LastPage}}
+
+% --- Bibliography ------------------------------------------------------------
+\usepackage{csquotes}
+\DeclareQuoteStyle{turkish}{\textquotedblleft}{\textquotedblright}{\textquoteleft}{\textquoteright}
+\usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% --- Links and references ----------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage[english,nameinlink,noabbrev]{cleveref}
+\crefname{section}{Bölüm}{Bölümler}
+\Crefname{section}{Bölüm}{Bölümler}
+\crefname{subsection}{Bölüm}{Bölümler}
+\Crefname{subsection}{Bölüm}{Bölümler}
+\crefname{appendix}{Ek}{Ekler}
+\Crefname{appendix}{Ek}{Ekler}
+\crefname{figure}{Şekil}{Şekiller}
+\Crefname{figure}{Şekil}{Şekiller}
+\crefname{table}{Tablo}{Tablolar}
+\Crefname{table}{Tablo}{Tablolar}
+\crefname{equation}{Denklem}{Denklemler}
+\Crefname{equation}{Denklem}{Denklemler}
+\crefname{lstlisting}{Kod}{Kodlar}
+\Crefname{lstlisting}{Kod}{Kodlar}
+\creflabelformat{equation}{#2(#1)#3}
+
+\hypersetup{pdftitle={\doctitle}, pdfauthor={\docauthor}, pdfsubject={\docid}}
+
+% Requirement IDs: \req{FR-01} prints a monospaced tag.
+\newcommand{\req}[1]{\texttt{#1}}
+
+\begin{document}
+
+\input{sections/00-titlepage}
+\input{sections/01-revision-history}
+
+\tableofcontents
+\clearpage
+
+\input{sections/02-introduction}
+\input{sections/03-requirements}
+\input{sections/04-architecture}
+\input{sections/05-design}
+\input{sections/06-implementation}
+\input{sections/07-testing}
+\input{sections/08-results}
+
+\printbibliography[heading=bibintoc,title={Kaynaklar}]
+
+\appendix
+\crefalias{section}{appendix}
+\input{sections/09-appendix}
+
+\end{document}

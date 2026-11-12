@@ -1,0 +1,25 @@
+% !TEX root = ../main.tex
+\section{Gereksinimler}
+\label{sec:gereksinimler}
+
+Gereksinimler benzersiz kimliklerle izlenir; doğrulama yöntemleri
+\cref{sec:test} içinde verilmiştir.
+
+\begin{longtable}{@{}p{1.6cm} p{8.4cm} p{1.8cm} p{2.2cm}@{}}
+  \caption{Fonksiyonel ve fonksiyonel olmayan gereksinimler.}
+  \label{tab:gereksinimler}                                                                                                   \\
+  \toprule
+  \textbf{Kimlik} & \textbf{Gereksinim}                                               & \textbf{Öncelik} & \textbf{Doğrulama} \\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{Kimlik} & \textbf{Gereksinim}                                               & \textbf{Öncelik} & \textbf{Doğrulama} \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  \req{FR-01}     & Sistem \qty{1}{\kilo\hertz} örnekleme hızında 4 kanal okumalıdır. & Yüksek           & Test               \\
+  \req{FR-02}     & Veriler USB üzerinden ana bilgisayara aktarılmalıdır.             & Yüksek           & Test               \\
+  \req{NFR-01}    & Güç tüketimi \qty{150}{\milli\watt} değerini aşmamalıdır.         & Orta             & Ölçüm              \\
+  \req{NFR-02}    & Ürün yazılımı sahada güncellenebilir olmalıdır.                   & Düşük            & İnceleme           \\
+\end{longtable}

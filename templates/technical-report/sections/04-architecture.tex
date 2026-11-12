@@ -1,0 +1,25 @@
+% !TEX root = ../main.tex
+\section{Sistem Mimarisi}
+\label{sec:mimari}
+
+\Cref{fig:mimari} sistemin üst düzey bileşenlerini gösterir.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+    node distance=1.2cm and 1.6cm,
+    block/.style={draw, rounded corners, minimum width=2.6cm, minimum height=1cm, align=center, fill=blue!6},
+    arrow/.style={-{Stealth[length=2.5mm]}, thick}]
+    \node[block] (sensor) {Sensörler};
+    \node[block, right=of sensor] (adc) {ADC};
+    \node[block, right=of adc] (mcu) {MCU\\(RTOS)};
+    \node[block, below=of mcu] (usb) {USB\\Arayüzü};
+    \node[block, left=of usb] (host) {Ana\\Bilgisayar};
+    \draw[arrow] (sensor) -- (adc);
+    \draw[arrow] (adc) -- node[above]{SPI} (mcu);
+    \draw[arrow] (mcu) -- (usb);
+    \draw[arrow] (usb) -- (host);
+  \end{tikzpicture}
+  \caption{Sistem mimarisi.}
+  \label{fig:mimari}
+\end{figure}

@@ -1,0 +1,20 @@
+# LaTeX build output (latexmk -outdir=build)
+/build/
+# Stray auxiliary files if something was compiled in place
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.lof
+*.lot
+*.xdv
+indent.log
+*.bak[0-9]*

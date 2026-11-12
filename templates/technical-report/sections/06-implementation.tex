@@ -1,0 +1,17 @@
+% !TEX root = ../main.tex
+\section{Gerçekleştirme}
+\label{sec:gerceklestirme}
+
+\Cref{lst:isr} örnekleme kesme rutinini gösterir.
+
+\begin{lstlisting}[language=C, caption={ADC kesme rutini.}, label={lst:isr}]
+/* ADC conversion-complete interrupt */
+void ADC_IRQHandler(void)
+{
+    uint16_t sample = ADC1->DR;     /* read result */
+    ring_buffer_push(&rb, sample);
+    if (ring_buffer_full(&rb)) {
+        notify_task(usb_task);
+    }
+}
+\end{lstlisting}

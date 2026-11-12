@@ -1,0 +1,142 @@
+% !LW recipe = XeLaTeX (latexmk)
+% -----------------------------------------------------------------------------
+%  Article template — latex-dev-environment
+%  Engine : XeLaTeX (fontspec)  |  Bibliography : biblatex + biber
+%  Build  : latexmk  (VS Code: Ctrl+Alt+B or save)  ->  build/main.pdf
+% -----------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+% --- Page layout -------------------------------------------------------------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% --- Language: English main, Turkish available via \begin{turkish} ... ------
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{turkish}
+
+% --- Mathematics (load before fontspec / unicode-math) -----------------------
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+
+% --- Fonts: Aptos if installed, otherwise TeX Gyre Heros ---------------------
+\usepackage{fontspec}
+\IfFontExistsTF{Aptos}{%
+  \setmainfont{Aptos}[
+    BoldFont       = {Aptos Bold},
+    ItalicFont     = {Aptos Italic},
+    BoldItalicFont = {Aptos Bold Italic}]%
+}{%
+  \setmainfont{TeX Gyre Heros}%
+}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+
+% --- Figures, tables, units --------------------------------------------------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{siunitx}
+\usepackage[final]{microtype}
+
+% --- Bibliography ------------------------------------------------------------
+\usepackage{csquotes}
+\usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% --- Links and references (hyperref late, cleveref last) ---------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink]{cleveref}
+
+\newtheorem{theorem}{Theorem}
+
+% --- Metadata ----------------------------------------------------------------
+\title{Article Title}
+\author{Author Name\\ \small Affiliation, \texttt{author@example.com}}
+\date{\today}
+
+\hypersetup{pdftitle={Article Title}, pdfauthor={Author Name}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  A short summary of the problem, the approach, the main results and the
+  conclusion. Keep it under 250 words.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+State the problem and the contribution. Cite related work
+\autocite{knuth1984texbook,lamport1994latex}. The method is described in
+\cref{sec:methods}, results are in \cref{sec:results}.
+
+Turkish text is typeset with the correct hyphenation rules:
+\begin{turkish}
+  Türkçe karakterler: ğ, ü, ş, ı, ö, ç, İ.
+\end{turkish}
+
+\section{Methods}
+\label{sec:methods}
+
+The error metric is defined in \cref{eq:mpjpe}:
+\begin{equation}
+  \mathrm{MPJPE} = \frac{1}{N} \sum_{i=1}^{N}
+  \left\| \hat{\mathbf{p}}_i - \mathbf{p}_i \right\|_2
+  \label{eq:mpjpe}
+\end{equation}
+
+A multi-line derivation:
+\begin{align}
+  f(x) & = {(x + 1)}^2        \label{eq:square} \\
+       & = x^2 + 2x + 1.    \nonumber
+\end{align}
+
+\begin{theorem}
+  \label{thm:example}
+  For every $x \in \mathbb{R}$, $f(x) \geq 0$.
+\end{theorem}
+
+\begin{proof}
+  $f(x)$ is a square, see \cref{eq:square}.
+\end{proof}
+
+\section{Results}
+\label{sec:results}
+
+\Cref{tab:results} summarises the measurements; \cref{fig:example} shows a
+placeholder figure.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Example results.}
+  \label{tab:results}
+  \begin{tabular}{lSS}
+    \toprule
+    Method   & {Error (\si{\milli\metre})} & {Time (\si{\second})} \\
+    \midrule
+    Baseline & 52.4                        & 0.82                  \\
+    Proposed & 41.7                        & 0.95                  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{example-image-a}
+  \caption{Placeholder figure (replace with \texttt{figures/your-file.pdf}).}
+  \label{fig:example}
+\end{figure}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Summarise the findings and future work.
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

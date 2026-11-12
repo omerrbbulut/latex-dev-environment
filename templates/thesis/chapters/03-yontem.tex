@@ -1,0 +1,40 @@
+% !TEX root = ../main.tex
+\chapter{Yöntem}
+\label{chap:yontem}
+
+Hata ölçütü olarak \ac{MPJPE} kullanılmıştır (\cref{eq:mpjpe}):
+\begin{equation}
+  \mathrm{MPJPE} = \frac{1}{N} \sum_{i=1}^{N}
+  \left\| \hat{\mathbf{p}}_i - \mathbf{p}_i \right\|_2
+  \label{eq:mpjpe}
+\end{equation}
+
+\begin{theorem}
+  \label{thm:ornek}
+  Her $x \in \mathbb{R}$ için $x^2 \geq 0$ sağlanır.
+\end{theorem}
+
+\begin{proof}
+  Gerçel sayıların karesi negatif olamaz.
+\end{proof}
+
+\Cref{thm:ornek} ve \cref{fig:akis} yöntemin temelini oluşturur.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{example-image-a}
+    \caption{Girdi.}
+    \label{fig:akis-girdi}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{example-image-b}
+    \caption{Çıktı.}
+    \label{fig:akis-cikti}
+  \end{subfigure}
+  \caption{Yöntemin akışı (yer tutucu görseller).}
+  \label{fig:akis}
+\end{figure}
