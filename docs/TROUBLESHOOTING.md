@@ -102,6 +102,11 @@ LaTeX/BibTeX dosyalarında etkindir.
 
 ## Yapılandırma
 
+**`do not run install-ubuntu.sh with sudo`.** Betikleri kendi kullanıcınızla
+çalıştırın: `./scripts/install-ubuntu.sh`. Gerekirse apt için `sudo`
+parolasını betik kendisi ister. `sudo` ile çalıştırmak root'un ev dizinini
+yapılandırır ve root'a ait dosyalar bırakır. Bu yüzden engellenir.
+
 **`WARN '...' is already set outside the managed block`.** O anahtarı siz
 tanımlamışsınız ve sizin değeriniz kullanılıyor. Depo değerini kullanmak
 için kendi satırınızı silip `configure-vscode.sh` çalıştırın.

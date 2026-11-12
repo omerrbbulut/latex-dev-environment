@@ -100,8 +100,20 @@ iki yöntem vardır. İkisi de gerçek ayarlarınıza dokunmaz.
 sudo apt install docker.io && sudo usermod -aG docker $USER   # bir kez; sonra oturumu kapatıp açın
 ./tests/container-test.sh                       # ubuntu:26.04
 ./tests/container-test.sh --image ubuntu:24.04  # başka sürüm
+./tests/container-test.sh --mode both           # normal kullanıcı + root
 ./tests/container-test.sh --shell               # sonunda konteynere kabuk aç
 ```
+
+Kipler (`--mode`):
+
+| Kip | Ne test eder |
+|---|---|
+| `user` (varsayılan) | Gerçek masaüstü gibi: sudo yetkili normal kullanıcı kurar, apt `sudo` ile çalışır. Ek kontroller: ev dizininde root'a ait dosya yok, yapılandırma dosyaları kullanıcıya ait, `sudo ./scripts/install-ubuntu.sh` reddediliyor ve `/root` altında hiçbir şey oluşmuyor. |
+| `root` | Her şey root olarak (konteyner/CI senaryosu, `sudo` hiç kullanılmaz) |
+| `both` | İkisi, her biri ayrı temiz konteynerde |
+
+Testteki kullanıcının sudo'su parola sormaz (parolayı yazacak kimse yoktur).
+Gerçek kurulumda `sudo` parolanızı bir kez ister.
 
 Podman da desteklenir (`sudo apt install podman`, root gerekmez). Betik temiz
 bir Ubuntu konteynerinde sırasıyla şunları çalıştırır:
@@ -109,7 +121,7 @@ bir Ubuntu konteynerinde sırasıyla şunları çalıştırır:
 tekrar (kurulacak bir şey kalmamalı), `configure-vscode.sh` iki kez (ikincisi
 değişiklik yapmamalı), `doctor.sh --no-vscode` (0 FAIL) ve `tests/run-tests.sh`.
 Depo konteynere salt okunur bağlanır ve kopyalanır. Ana sistem değişmez.
-Konteynerde root olunduğu için betikler `sudo` kullanmaz.
+Betikleri `sudo` ile çalıştırmayın (`sudo ./scripts/install-ubuntu.sh` reddedilir; aksi hâlde root'un VS Code'u yapılandırılırdı). Betik `sudo`'yu yalnızca apt için kendisi ister. Gerçek root (konteyner) olarak çalışırken `sudo` kullanılmaz.
 
 ### 2. Boş HOME: VS Code arayüzü dahil (paketler hariç)
 
