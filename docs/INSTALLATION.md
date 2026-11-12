@@ -126,12 +126,14 @@ Betikleri `sudo` ile çalıştırmayın (`sudo ./scripts/install-ubuntu.sh` redd
 ### 2. Boş HOME: VS Code arayüzü dahil (paketler hariç)
 
 ```bash
-mkdir ~/lde-fresh-home
+mkdir "$HOME/lde-fresh-home"
 env -u XDG_CONFIG_HOME -u XDG_STATE_HOME -u XDG_CACHE_HOME -u XDG_DATA_HOME \
-    HOME=~/lde-fresh-home ./scripts/install-ubuntu.sh --skip-packages
-HOME=~/lde-fresh-home ./scripts/new-project.sh thesis ~/lde-fresh-home/tez-test
-env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME=~/lde-fresh-home code ~/lde-fresh-home/tez-test
+    HOME="$HOME/lde-fresh-home" ./scripts/install-ubuntu.sh --skip-packages
+HOME="$HOME/lde-fresh-home" ./scripts/new-project.sh thesis "$HOME/lde-fresh-home/tez-test"
+env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$HOME/lde-fresh-home" code "$HOME/lde-fresh-home/tez-test"
 ```
+
+`~` yerine `$HOME` kullanılır: zsh, `HOME=~/...` biçimindeki `~` işaretini açmaz. VS Code o zaman *"Unable to write program user data"* hatası verir.
 
 Ayrı, hiç yapılandırılmamış bir VS Code penceresi açılır (varsayılan tema,
 eklentiler Marketplace'ten yeni indirilmiş, Aptos görünmez). Kısayolları,
