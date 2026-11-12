@@ -31,6 +31,7 @@ latex-dev-environment/
 │   └── project.gitignore      # new-project.sh tarafından kopyalanır
 ├── tests/
 │   ├── run-tests.sh           # depo test paketi
+│   ├── container-test.sh      # temiz Ubuntu konteynerinde sıfırdan kurulum testi
 │   ├── smoke-test.tex         # motordan bağımsız test belgesi (pdf/xe/lua)
 │   ├── references.bib
 │   ├── snippet_check.py       # snippet dilbilgisi + genişletip derleme
@@ -90,6 +91,7 @@ Ctrl+S / Ctrl+Alt+B
 | Kurulum | `run-tests.sh` §5 | sanal HOME'da kur/kur/kaldır; ayarlar bayt bayt geri döner |
 | Şablonlar | `run-tests.sh` §6 | XeLaTeX + LuaLaTeX, 0 uyarı, SyncTeX, ChkTeX temiz, latexindent kararlı |
 | Ortam | `doctor.sh` | gerçek sistemde araçlar, eklenti, komut kimlikleri, ayar anahtarları, derleme, biber, SyncTeX ileri/ters |
+| Temiz sistem | `container-test.sh` | apt dahil sıfırdan kurulum, tekrar kurulum, doctor, test paketi |
 | Arayüz | elle | kısayolların basınca çalışması, PDF sekmesi, Ctrl+Click, snippet listesi |
 
 ## Bilinçli olarak yapılmayanlar

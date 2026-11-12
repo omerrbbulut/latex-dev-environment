@@ -88,3 +88,44 @@ Heros* ile derlemeye devam eder (test edildi).
 ```bash
 sudo apt install shellcheck
 ```
+
+## Temiz sistemde test
+
+Ortam zaten kurulu bir makinede kurulumun "sıfırdan" çalıştığını görmek için
+iki yöntem vardır. İkisi de gerçek ayarlarınıza dokunmaz.
+
+### 1. Konteyner: paket kurulumu dahil (GUI yok)
+
+```bash
+sudo apt install docker.io && sudo usermod -aG docker $USER   # bir kez; sonra oturumu kapatıp açın
+./tests/container-test.sh                       # ubuntu:26.04
+./tests/container-test.sh --image ubuntu:24.04  # başka sürüm
+./tests/container-test.sh --shell               # sonunda konteynere kabuk aç
+```
+
+Podman da desteklenir (`sudo apt install podman`, root gerekmez). Betik temiz
+bir Ubuntu konteynerinde sırasıyla şunları çalıştırır:
+`install-ubuntu.sh --yes --skip-vscode` (tüm apt paketleri), aynı komutu
+tekrar (kurulacak bir şey kalmamalı), `configure-vscode.sh` iki kez (ikincisi
+değişiklik yapmamalı), `doctor.sh --no-vscode` (0 FAIL) ve `tests/run-tests.sh`.
+Depo konteynere salt okunur bağlanır ve kopyalanır. Ana sistem değişmez.
+Konteynerde root olunduğu için betikler `sudo` kullanmaz.
+
+### 2. Boş HOME: VS Code arayüzü dahil (paketler hariç)
+
+```bash
+mkdir ~/lde-fresh-home
+env -u XDG_CONFIG_HOME -u XDG_STATE_HOME -u XDG_CACHE_HOME -u XDG_DATA_HOME \
+    HOME=~/lde-fresh-home ./scripts/install-ubuntu.sh --skip-packages
+HOME=~/lde-fresh-home ./scripts/new-project.sh thesis ~/lde-fresh-home/tez-test
+env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME=~/lde-fresh-home code ~/lde-fresh-home/tez-test
+```
+
+Ayrı, hiç yapılandırılmamış bir VS Code penceresi açılır (varsayılan tema,
+eklentiler Marketplace'ten yeni indirilmiş, Aptos görünmez). Kısayolları,
+PDF sekmesini, SyncTeX'i ve snippet'leri burada elle deneyin
+([SHORTCUTS.md](SHORTCUTS.md#doğrulama-durumu)). Bitince pencereyi kapatıp
+`rm -rf ~/lde-fresh-home`.
+
+Tam gerçekçi test (paketler + arayüz) için GNOME Boxes ile bir Ubuntu 26.04
+sanal makinesi kullanın (`sudo apt install gnome-boxes`).

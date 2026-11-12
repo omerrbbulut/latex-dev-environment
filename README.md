@@ -270,6 +270,11 @@ Ayrıntı: [docs/WORKFLOW.md](docs/WORKFLOW.md#kaynakça).
 ./scripts/doctor.sh --project ~/Documents/latex-projects/test   # proje ayarı çakışmaları
 ```
 
+Kurulumun temiz bir sistemde çalıştığını test etmek için:
+`./tests/container-test.sh` (Docker/Podman, paketler dahil) veya boş bir HOME
+ile ayrı bir VS Code penceresi
+([docs/INSTALLATION.md](docs/INSTALLATION.md#temiz-sistemde-test)).
+
 Sık karşılaşılanlar (Aptos bulunamadı, `I can't write on file
 chapters/x.aux`, workspace ayarlarının global tarifleri gizlemesi, kısayolun
 çalışmaması, Türkçe yazım uyarıları…): [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
