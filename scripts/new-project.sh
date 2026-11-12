@@ -27,7 +27,7 @@ done
 ((${#pos[@]} == 2)) || usage 2
 tpl=${pos[0]} dest=${pos[1]}
 src="$LDE_REPO_DIR/templates/$tpl"
-[[ -d "$src" ]] || die "unknown template '$tpl' (available: $(ls "$LDE_REPO_DIR/templates" | tr '\n' ' '))"
+[[ -d "$src" ]] || die "unknown template '$tpl' (available: $(find "$LDE_REPO_DIR/templates" -mindepth 1 -maxdepth 1 -type d -printf '%f ' | sort))"
 if [[ -e "$dest" ]] && [[ -n "$(ls -A "$dest" 2>/dev/null)" ]]; then
   die "target '$dest' exists and is not empty; refusing to overwrite"
 fi

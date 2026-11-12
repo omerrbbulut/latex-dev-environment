@@ -16,7 +16,7 @@
 #  8. git diff --check / no binaries or secrets staged
 set -Euo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$REPO"
+cd "$REPO" || exit 1
 FAILS=0
 t_ok()   { printf '  \e[32mok\e[0m    %s\n' "$*"; }
 t_fail() { printf '  \e[31mFAIL\e[0m  %s\n' "$*"; FAILS=$((FAILS + 1)); }
@@ -186,8 +186,9 @@ else
   files=$( { git ls-files; git ls-files --others --exclude-standard; } | sort -u)
   bins=$(while IFS= read -r f; do [[ -f "$f" ]] && ! grep -Iq . "$f" && [[ -s "$f" ]] && echo "$f"; done <<<"$files")
   [[ -z "$bins" ]] && t_ok "no binary files" || t_fail "binary files: $bins"
+  mapfile -t file_list <<<"$files"
   if grep -nEI '(gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]+|password\s*[:=]\s*\S+)' \
-       $files 2>/dev/null; then t_fail "possible secret found"; else t_ok "no secrets / tokens / private keys"; fi
+       -- "${file_list[@]}" 2>/dev/null; then t_fail "possible secret found"; else t_ok "no secrets / tokens / private keys"; fi
   if grep -nEi '\.(ttf|otf|ttc)$' <<<"$files"; then t_fail "font files present"; else t_ok "no font files"; fi
 fi
 

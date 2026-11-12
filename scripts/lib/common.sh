@@ -1,4 +1,7 @@
 # shellcheck shell=bash
+# This file is a library: the variables it defines are used by the scripts
+# that source it (verified), so "appears unused" (SC2034) does not apply here.
+# shellcheck disable=SC2034
 # latex-dev-environment — shared helpers for the scripts in scripts/.
 # Source this file; do not execute it.
 

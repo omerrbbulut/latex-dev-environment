@@ -1,0 +1,4 @@
+# Resolve `source` of scripts/lib/common.sh relative to each script,
+# so variables defined there are known when checking the scripts.
+source-path=SCRIPTDIR
+external-sources=true
