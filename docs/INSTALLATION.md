@@ -3,9 +3,8 @@
 ## Temiz bir Ubuntu sisteminde
 
 ```bash
-sudo apt-get update && sudo apt-get install -y git gh
-gh auth login                                   # depo özel olduğu için gerekli
-gh repo clone omerrbbulut/latex-dev-environment ~/Projects/latex-dev-environment
+sudo apt-get update && sudo apt-get install -y git
+git clone https://github.com/omerrbbulut/latex-dev-environment.git ~/Projects/latex-dev-environment
 cd ~/Projects/latex-dev-environment
 ./scripts/install-ubuntu.sh --install-vscode    # VS Code yoksa resmi depodan kurar
 ```

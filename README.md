@@ -307,17 +307,35 @@ betik sonunda yazdırılır.
 
 ## 16. GitHub kullanımı
 
-Depo **özeldir (private)**: `omerrbbulut/latex-dev-environment`.
+Depo **herkese açıktır (public)**: `omerrbbulut/latex-dev-environment`.
+Sürümler: [Releases](https://github.com/omerrbbulut/latex-dev-environment/releases).
+
+`main` dalı bir kural setiyle (*main: pull requests only*) korunur. Kimse için,
+depo sahibi dahil, istisna yoktur:
+
+| Kural | Etkisi |
+|---|---|
+| Pull request zorunlu | `main` dalına doğrudan push reddedilir (`GH013: Changes must be made through a pull request`) |
+| Force push yasak | `main` geçmişi yeniden yazılamaz |
+| Silme yasak | `main` dalı silinemez |
+
+Gerekli onay sayısı 0'dır: GitHub kendi PR'ınızı onaylamanıza izin vermez. Tek
+geliştirici olarak onay şartı sizi kilitlerdi.
 
 ```bash
-gh auth status                                    # oturum kontrolü
-gh repo clone omerrbbulut/latex-dev-environment ~/Projects/latex-dev-environment
-git switch -c ozellik/yeni-snippet                # değişiklik için dal
+git clone https://github.com/omerrbbulut/latex-dev-environment.git ~/Projects/latex-dev-environment
+git switch -c ozellik/yeni-snippet                # her değişiklik için dal
 ./tests/run-tests.sh                              # commit öncesi testler
 git commit -m "snippets: add minipage snippet"
 git push -u origin ozellik/yeni-snippet
-gh pr create --fill                               # isteğe bağlı
+gh pr create --fill                               # PR aç
+gh pr merge --squash --delete-branch              # birleştir, dalı sil
+git switch main && git pull                       # yerel main'i güncelle
 ```
+
+Commit'ler GitHub'ın no-reply adresiyle (`41139691+omerrbbulut@users.noreply.github.com`)
+yazılır. Bu adres yalnızca bu depo için yerel olarak ayarlıdır
+(`git config user.email`); kişisel e-posta adresi geçmişte görünmez.
 
 Commit öncesi `tests/run-tests.sh` şunları kontrol eder: `bash -n` ve (kuruluysa)
 ShellCheck, JSON/JSONC geçerliliği, snippet sözdizimi ve derlenmesi, birleştirme
